@@ -1,0 +1,51 @@
+############################
+# Unreal Engine Essentials #
+############################
+
+# Project config files kept (do NOT ignore)
+!Config/Default*.ini
+
+# Ignore user-specific config
+Config/DefaultEditorUserSettings.ini
+Config/DefaultEditorPerProjectUserSettings.ini
+Config/DefaultEditorLayout.ini
+
+# Ignore engine-generated folders
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Keep build scripts
+!Source/**/*.Target.cs
+!Source/**/*.Build.cs
+
+########################
+# Editor Junk          #
+########################
+
+.vs/
+.vscode/
+.idea/
+
+#########################
+# Build Artifacts       #
+#########################
+
+*.exe
+*.dll
+*.lib
+*.app
+*.pdb
+*.so
+*.dylib
+
+############################
+# OS / Temporary files     #
+############################
+
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.backup
