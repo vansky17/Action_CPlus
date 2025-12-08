@@ -50,4 +50,4 @@ void AVanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanCharacter::Move);
 }
-
+//Test only
