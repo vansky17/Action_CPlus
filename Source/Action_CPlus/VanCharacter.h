@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "VanCharacter.generated.h"
 
+struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
 class USpringArmComponent;
@@ -33,6 +34,7 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArmComp;
 	
 	void Move(const FInputActionValue& InValue);
+	void Look(const FInputActionInstance& InValue);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -42,6 +44,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
