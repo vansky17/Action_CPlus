@@ -4,6 +4,7 @@
 #include "VanProjectileMagic.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -20,6 +21,9 @@ AVanProjectileMagic::AVanProjectileMagic()
 	LoopedNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("LoopedNiagaraComp");
 	LoopedNiagaraComponent->SetupAttachment(SphereComponent);
 	
+	LoopedAudioComponent = CreateDefaultSubobject<UAudioComponent>("LoopedAudioComponent");
+	LoopedAudioComponent->SetupAttachment(SphereComponent);
+	
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileComp");
 	ProjectileMovementComponent->InitialSpeed = 2000.f;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
@@ -35,10 +39,13 @@ void AVanProjectileMagic::PostInitializeComponents()
 }
 void AVanProjectileMagic::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
-	UGameplayStatics::ApplyDamage(OtherActor, 10.f, GetInstigatorController(), this, DmgTypeClass);
+	
+	FVector HitFromDirection = GetActorRotation().Vector();
+	UGameplayStatics::ApplyPointDamage(OtherActor, 10.f, HitFromDirection, Hit, GetInstigatorController(), this, DmgTypeClass);
 	
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExpostionEffect, GetActorLocation());
+	
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
 	
 	Destroy();
 }

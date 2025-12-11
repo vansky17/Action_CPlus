@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "GameFramework/Character.h"
 #include "VanCharacter.generated.h"
 
@@ -12,7 +13,7 @@ struct FInputActionValue;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
-
+class UAnimMontage;
 UCLASS(Abstract)
 class ACTION_CPLUS_API AVanCharacter : public ACharacter
 {
@@ -24,8 +25,16 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AVanProjectileMagic> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> CastingEffect;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> CastingSound;
+	
 	UPROPERTY(VisibleAnywhere, Category="PrimaryAttack");
 	FName MuzzleSocketName;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimMontage> AttackMontage; 
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Move;
@@ -46,6 +55,7 @@ protected:
 	void Look(const FInputActionInstance& InValue);
 	
 	void PrimaryAttack();
+	void AttackTimerElapsed();
 	
 protected:
 	// Called when the game starts or when spawned

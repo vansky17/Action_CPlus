@@ -3,10 +3,12 @@
 
 #include "VanCharacter.h"
 #include "EnhancedInputComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Projectiles/VanProjectileMagic.h"
 #include "Engine/EngineTypes.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AVanCharacter::AVanCharacter()
@@ -47,6 +49,22 @@ void AVanCharacter::Look(const FInputActionInstance& InValue)
 }
 
 void AVanCharacter::PrimaryAttack()
+{
+	PlayAnimMontage(AttackMontage);
+	FTimerHandle AttackTimerHandle;
+	const float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator,
+	EAttachLocation::Type::SnapToTarget, true);
+	
+	UGameplayStatics::PlaySound2D(this, CastingSound);
+	
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AVanCharacter::AttackTimerElapsed, AttackDelayTime) ;
+	
+	
+}
+
+void AVanCharacter::AttackTimerElapsed()
 {
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
 

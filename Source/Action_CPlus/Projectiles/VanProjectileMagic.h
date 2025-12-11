@@ -11,6 +11,7 @@ class UNiagaraSystem;
 class USphereComponent;
 class UProjectileMovementComponent;
 class UNiagaraComponent;
+class UAudioComponent;
 
 UCLASS()
 class ACTION_CPLUS_API AVanProjectileMagic : public AActor
@@ -18,7 +19,16 @@ class ACTION_CPLUS_API AVanProjectileMagic : public AActor
 	GENERATED_BODY()
 protected:
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
+	
+	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UNiagaraSystem> ExpostionEffect;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAudioComponent> LoopedAudioComponent;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> ExplosionSound;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<USphereComponent> SphereComponent;	
