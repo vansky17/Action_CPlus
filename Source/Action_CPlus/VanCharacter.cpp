@@ -5,6 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Projectiles/VanProjectileMagic.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values
 AVanCharacter::AVanCharacter()
@@ -18,6 +20,8 @@ AVanCharacter::AVanCharacter()
 	
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+	
+	MuzzleSocketName = "Muzzle_01";
 	
 	
 }
@@ -42,6 +46,23 @@ void AVanCharacter::Look(const FInputActionInstance& InValue)
 	AddControllerYawInput(InputValue.X);
 }
 
+void AVanCharacter::PrimaryAttack()
+{
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+
+	FRotator SpawnRotation = GetControlRotation();
+	FVector ForwardVector = SpawnRotation.Vector();
+
+	// Push the spawn point slightly forward so it is outside the capsule
+	SpawnLocation += ForwardVector * 37.f;  // try 30–50
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+}
+
 // Called when the game starts or when spawned
 void AVanCharacter::BeginPlay()
 {
@@ -63,6 +84,7 @@ void AVanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanCharacter::Move);
-	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanCharacter:: Look);
+	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanCharacter::Look);
+	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this, &AVanCharacter::PrimaryAttack);
 }
 //Test only

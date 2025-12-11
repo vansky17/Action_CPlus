@@ -6,26 +6,35 @@
 #include "GameFramework/Character.h"
 #include "VanCharacter.generated.h"
 
+class AVanProjectileMagic;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class ACTION_CPLUS_API AVanCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
+ 
 public:
 	// Sets default values for this character's properties
 	AVanCharacter();
 protected:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AVanProjectileMagic> ProjectileClass;
+	UPROPERTY(VisibleAnywhere, Category="PrimaryAttack");
+	FName MuzzleSocketName;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Move;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Look;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> Input_PrimaryAttack;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components");
 	TObjectPtr<UCameraComponent> CameraComp;
@@ -35,6 +44,8 @@ protected:
 	
 	void Move(const FInputActionValue& InValue);
 	void Look(const FInputActionInstance& InValue);
+	
+	void PrimaryAttack();
 	
 protected:
 	// Called when the game starts or when spawned
