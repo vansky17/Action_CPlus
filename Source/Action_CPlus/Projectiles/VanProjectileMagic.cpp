@@ -35,26 +35,54 @@ void AVanProjectileMagic::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	SphereComponent->OnComponentHit.AddDynamic(this, &AVanProjectileMagic::OnActorHit);
-	SphereComponent->IgnoreActorWhenMoving(GetInstigator(),true);
+	//SphereComponent->IgnoreActorWhenMoving(GetInstigator(),true);
 }
-void AVanProjectileMagic::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AVanProjectileMagic::OnActorHit(
+	UPrimitiveComponent* HitComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse,
+	const FHitResult& Hit)
 {
-	
-	FVector HitFromDirection = GetActorRotation().Vector();
-	UGameplayStatics::ApplyPointDamage(OtherActor, 10.f, HitFromDirection, Hit, GetInstigatorController(), this, DmgTypeClass);
-	
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExpostionEffect, GetActorLocation());
-	
-	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
-	
+	if (!OtherActor || !OtherComp)
+		return;
+
+	if (OtherComp->IsSimulatingPhysics())
+	{
+		const FVector ShotDirection = GetVelocity().GetSafeNormal();
+
+		UGameplayStatics::ApplyPointDamage(
+			OtherActor,
+			10.f,
+			ShotDirection,
+			Hit,
+			GetInstigatorController(),
+			this,
+			DmgTypeClass
+		);
+	}
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+		this,
+		ExpostionEffect,
+		Hit.ImpactPoint
+	);
+
+	UGameplayStatics::PlaySoundAtLocation(
+		this,
+		ExplosionSound,
+		Hit.ImpactPoint
+	);
+
 	Destroy();
 }
+
 void AVanProjectileMagic::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetInstigator())
+	if (APawn* Pawn = GetInstigator())
 	{
-		SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
+		SphereComponent->IgnoreActorWhenMoving(Pawn, true);
 	}
 }

@@ -48,6 +48,12 @@ void AVanCharacter::Look(const FInputActionInstance& InValue)
 	AddControllerYawInput(InputValue.X);
 }
 
+void AVanCharacter::Jump(const FInputActionValue& InValue)
+{
+
+		Super::Jump();
+}
+
 void AVanCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackMontage);
@@ -104,5 +110,6 @@ void AVanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanCharacter::Move);
 	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanCharacter::Look);
 	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this, &AVanCharacter::PrimaryAttack);
+	EnhancedInput->BindAction(Input_Jump, ETriggerEvent::Started, this, &AVanCharacter::Jump);
 }
 //Test only
