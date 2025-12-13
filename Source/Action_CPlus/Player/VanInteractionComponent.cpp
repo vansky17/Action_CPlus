@@ -3,6 +3,8 @@
 
 #include "VanInteractionComponent.h"
 
+#include "Engine/OverlapResult.h"
+
 
 // Sets default values for this component's properties
 UVanInteractionComponent::UVanInteractionComponent()
@@ -33,8 +35,41 @@ void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	
 	APlayerController* PC = CastChecked<APlayerController> ( GetOwner());
 	FVector Center = PC->GetPawn()->GetActorLocation(); 
-	DrawDebugBox(GetWorld(), Center, FVector(20.0f), FColor::Red, false);
-
-	// ...
+	
+	
+	ECollisionChannel CollisionChannel = ECC_Visibility;
+	
+	TArray<FOverlapResult> Overlaps;
+	FCollisionShape Shape;
+	Shape.SetSphere(InteractionRadius);
+	
+	GetWorld()->OverlapMultiByChannel(Overlaps, Center, FQuat::Identity, CollisionChannel, Shape);
+	
+	DrawDebugSphere(GetWorld(), Center, InteractionRadius, 32, FColor::White);
+	
+	AActor* BestActor = nullptr;
+	float HighestDotResutl = -1.0;
+	
+	for (FOverlapResult& Overlap : Overlaps)
+	{
+		FVector OverlapLocation = Overlap.GetActor()->GetActorLocation();
+		DrawDebugBox(GetWorld(), OverlapLocation, FVector(50.0f), FColor::Red, false);
+		
+		FVector OverlapDirection = (OverlapLocation - Center).GetSafeNormal();
+		float DotResult = FVector::DotProduct(OverlapDirection, PC->GetControlRotation().Vector());
+		
+		FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
+		DrawDebugString(GetWorld(), OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
+		
+		if (DotResult > HighestDotResutl)
+		{
+			BestActor = Overlap.GetActor();
+			HighestDotResutl = DotResult;
+		}
+	}
+	if (BestActor)
+	{
+		DrawDebugBox(GetWorld(), BestActor->GetActorLocation(), FVector(70.0f), FColor::Green, false);
+	}
 }
 

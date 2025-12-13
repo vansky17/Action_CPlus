@@ -6,11 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "VanItemChest.generated.h"
 
+class UStaticMeshComponent;
+
 UCLASS()
 class ACTION_CPLUS_API AVanItemChest : public AActor
 {
 	GENERATED_BODY()
-
+	
+	
 public:
 	// Sets default values for this actor's properties
 	AVanItemChest();
@@ -18,6 +21,18 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UStaticMeshComponent> BaseMeshComponent;
+    	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UStaticMeshComponent> LidMeshComponent;
+	
+	UPROPERTY(EditAnywhere)
+	float AnimationSpeed = 50.0f;
+	UPROPERTY(EditAnywhere)
+	float AnimationTargetPitch = 120.0f;
+	
+	float CurrentAnimationPitch = 0.0f;
 
 public:
 	// Called every frame

@@ -19,6 +19,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly)
+	float InteractionRadius = 800;
 
 public:
 	// Called every frame
