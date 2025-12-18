@@ -13,8 +13,11 @@ AVanItemChest::AVanItemChest()
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	
 	BaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMeshComponent"));
+	BaseMeshComponent->SetCollisionProfileName("Interaction");
 	RootComponent = BaseMeshComponent;
+	
 	LidMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMeshComponent"));
+	LidMeshComponent->SetCollisionProfileName("Interaction");
 	LidMeshComponent->SetupAttachment(BaseMeshComponent);
 }
 

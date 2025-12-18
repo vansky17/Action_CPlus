@@ -3,6 +3,7 @@
 
 #include "VanInteractionComponent.h"
 
+#include "Action_CPlus/VanGameTypes.h"
 #include "Action_CPlus/Core/VanInteractionInterface.h"
 #include "Engine/OverlapResult.h"
 
@@ -47,7 +48,7 @@ void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	FVector Center = PC->GetPawn()->GetActorLocation(); 
 	
 	
-	ECollisionChannel CollisionChannel = ECC_Visibility;
+	ECollisionChannel CollisionChannel = COLLISION_INTERACTION;
 	
 	TArray<FOverlapResult> Overlaps;
 	FCollisionShape Shape;
