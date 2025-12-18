@@ -22,6 +22,11 @@ AVanItemChest::AVanItemChest()
 void AVanItemChest::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
+
+void AVanItemChest::Interact()
+{
 	SetActorTickEnabled(true);
 }
 

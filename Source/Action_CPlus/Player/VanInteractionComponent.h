@@ -19,10 +19,14 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
 	UPROPERTY(EditDefaultsOnly)
 	float InteractionRadius = 800;
-
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<AActor> SelectedActor;
 public:
+	
+	void Interact();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;

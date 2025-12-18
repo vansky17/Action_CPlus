@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/VanInteractionInterface.h"
 #include "GameFramework/Actor.h"
 #include "VanItemChest.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class ACTION_CPLUS_API AVanItemChest : public AActor
+class ACTION_CPLUS_API AVanItemChest : public AActor, public IVanInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -36,5 +37,7 @@ protected:
 
 public:
 	// Called every frame
+	virtual void Interact() override;
+	
 	virtual void Tick(float DeltaTime) override;
 };

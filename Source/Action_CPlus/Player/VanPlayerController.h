@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "VanPlayerController.generated.h"
 
+class UInputAction;
 class UVanInteractionComponent;
 /**
  * 
@@ -18,6 +19,11 @@ class ACTION_CPLUS_API AVanPlayerController : public APlayerController
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UVanInteractionComponent> InteractionComponent;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UInputAction> Input_Interact;
+	void StartInteract();
+	
+	virtual void SetupInputComponent() override;
 	
 public:
 	AVanPlayerController();

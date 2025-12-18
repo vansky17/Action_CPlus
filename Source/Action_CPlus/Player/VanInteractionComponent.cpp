@@ -3,6 +3,7 @@
 
 #include "VanInteractionComponent.h"
 
+#include "Action_CPlus/Core/VanInteractionInterface.h"
 #include "Engine/OverlapResult.h"
 
 
@@ -26,6 +27,15 @@ void UVanInteractionComponent::BeginPlay()
 	
 }
 
+
+void UVanInteractionComponent::Interact()
+{
+	IVanInteractionInterface* InteractInterface = Cast<IVanInteractionInterface>(SelectedActor);
+	if (InteractInterface)
+	{
+		InteractInterface->Interact();
+	}
+}
 
 // Called every frame
 void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -53,20 +63,23 @@ void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	for (FOverlapResult& Overlap : Overlaps)
 	{
 		FVector OverlapLocation = Overlap.GetActor()->GetActorLocation();
-		DrawDebugBox(GetWorld(), OverlapLocation, FVector(50.0f), FColor::Red, false);
 		
 		FVector OverlapDirection = (OverlapLocation - Center).GetSafeNormal();
 		float DotResult = FVector::DotProduct(OverlapDirection, PC->GetControlRotation().Vector());
 		
-		FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
-		DrawDebugString(GetWorld(), OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
+		
 		
 		if (DotResult > HighestDotResutl)
 		{
 			BestActor = Overlap.GetActor();
 			HighestDotResutl = DotResult;
 		}
+		DrawDebugBox(GetWorld(), OverlapLocation, FVector(50.0f), FColor::Red, false);
+		FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
+		DrawDebugString(GetWorld(), OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
 	}
+	
+	SelectedActor = BestActor;
 	if (BestActor)
 	{
 		DrawDebugBox(GetWorld(), BestActor->GetActorLocation(), FVector(70.0f), FColor::Green, false);
