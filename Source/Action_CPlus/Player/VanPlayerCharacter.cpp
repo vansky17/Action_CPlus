@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "VanCharacter.h"
+#include "VanPlayerCharacter.h"
 #include "EnhancedInputComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Projectiles/VanProjectileMagic.h"
+#include "../Projectiles/VanProjectileMagic.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AVanCharacter::AVanCharacter()
+AVanPlayerCharacter::AVanPlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,7 +28,7 @@ AVanCharacter::AVanCharacter()
 	
 }
 
-void AVanCharacter::Move(const FInputActionValue& InValue)
+void AVanPlayerCharacter::Move(const FInputActionValue& InValue)
 {
 	FVector2D InputValue = InValue.Get<FVector2D>();
 	
@@ -41,20 +41,20 @@ void AVanCharacter::Move(const FInputActionValue& InValue)
 	AddMovementInput(RightDirection, InputValue.Y);
 }
 
-void AVanCharacter::Look(const FInputActionInstance& InValue)
+void AVanPlayerCharacter::Look(const FInputActionInstance& InValue)
 {
 	FVector2D InputValue = InValue.GetValue().Get<FVector2D>();
 	AddControllerPitchInput(InputValue.Y);
 	AddControllerYawInput(InputValue.X);
 }
 
-void AVanCharacter::Jump(const FInputActionValue& InValue)
+void AVanPlayerCharacter::Jump(const FInputActionValue& InValue)
 {
 
 		Super::Jump();
 }
 
-void AVanCharacter::PrimaryAttack()
+void AVanPlayerCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackMontage);
 	FTimerHandle AttackTimerHandle;
@@ -65,12 +65,12 @@ void AVanCharacter::PrimaryAttack()
 	
 	UGameplayStatics::PlaySound2D(this, CastingSound);
 	
-	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AVanCharacter::AttackTimerElapsed, AttackDelayTime) ;
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AVanPlayerCharacter::AttackTimerElapsed, AttackDelayTime) ;
 	
 	
 }
 
-void AVanCharacter::AttackTimerElapsed()
+void AVanPlayerCharacter::AttackTimerElapsed()
 {
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
 
@@ -88,28 +88,28 @@ void AVanCharacter::AttackTimerElapsed()
 }
 
 // Called when the game starts or when spawned
-void AVanCharacter::BeginPlay()
+void AVanPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AVanCharacter::Tick(float DeltaTime)
+void AVanPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
-void AVanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AVanPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanCharacter::Move);
-	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanCharacter::Look);
-	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this, &AVanCharacter::PrimaryAttack);
-	EnhancedInput->BindAction(Input_Jump, ETriggerEvent::Started, this, &AVanCharacter::Jump);
+	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::Move);
+	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::Look);
+	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::PrimaryAttack);
+	EnhancedInput->BindAction(Input_Jump, ETriggerEvent::Started, this, &AVanPlayerCharacter::Jump);
 }
 //Test only

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "NiagaraSystem.h"
 #include "GameFramework/Character.h"
-#include "VanCharacter.generated.h"
+#include "VanPlayerCharacter.generated.h"
 
 class AVanProjectileMagic;
 struct FInputActionInstance;
@@ -15,13 +15,13 @@ class USpringArmComponent;
 class UCameraComponent;
 class UAnimMontage;
 UCLASS(Abstract)
-class ACTION_CPLUS_API AVanCharacter : public ACharacter
+class ACTION_CPLUS_API AVanPlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
  
 public:
 	// Sets default values for this character's properties
-	AVanCharacter();
+	AVanPlayerCharacter();
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AVanProjectileMagic> ProjectileClass;

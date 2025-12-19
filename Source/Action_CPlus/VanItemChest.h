@@ -34,6 +34,9 @@ protected:
 	float AnimationTargetPitch = 120.0f;
 	
 	float CurrentAnimationPitch = 0.0f;
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void ChestAnimationComplete();
 
 public:
 	// Called every frame
