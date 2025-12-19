@@ -28,7 +28,7 @@ void AVanItemChest::BeginPlay()
 	
 }
 
-void AVanItemChest::Interact()
+void AVanItemChest::Interact_Implementation()
 {
 	SetActorTickEnabled(true);
 }

@@ -31,11 +31,12 @@ void UVanInteractionComponent::BeginPlay()
 
 void UVanInteractionComponent::Interact()
 {
-	IVanInteractionInterface* InteractInterface = Cast<IVanInteractionInterface>(SelectedActor);
+	/*IVanInteractionInterface* InteractInterface = Cast<IVanInteractionInterface>(SelectedActor);
 	if (InteractInterface)
 	{
 		InteractInterface->Interact();
-	}
+	}*/
+	IVanInteractionInterface::Execute_Interact(SelectedActor);
 }
 
 // Called every frame
