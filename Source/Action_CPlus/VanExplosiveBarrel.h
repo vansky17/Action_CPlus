@@ -50,6 +50,11 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	TObjectPtr<URadialForceComponent> RadialForceComp;
+	
+	UFUNCTION(BlueprintCallable, Category="Components")
+	void Explode();
+	UFUNCTION(BlueprintCallable, Category="Components")
+	void StartBurning();
 private:
 	// State
 	bool bHasExploded = false;
@@ -62,6 +67,5 @@ private:
 	FTimerHandle ExplosionTimerHandle;
 
 	// Helpers
-	void StartBurning();
-	void Explode();
+	
 };
