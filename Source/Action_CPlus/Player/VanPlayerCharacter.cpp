@@ -54,37 +54,54 @@ void AVanPlayerCharacter::Jump(const FInputActionValue& InValue)
 		Super::Jump();
 }
 
-void AVanPlayerCharacter::PrimaryAttack()
+void AVanPlayerCharacter::StartProjectileAttack(TSubclassOf<AVanProjectile> ProjectileClass)
 {
 	PlayAnimMontage(AttackMontage);
-	FTimerHandle AttackTimerHandle;
-	const float AttackDelayTime = 0.2f;
+	
 	
 	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator,
 	EAttachLocation::Type::SnapToTarget, true);
 	
 	UGameplayStatics::PlaySound2D(this, CastingSound);
 	
-	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AVanPlayerCharacter::AttackTimerElapsed, AttackDelayTime) ;
-	
+	FTimerHandle AttackTimerHandle;
+	const float AttackDelayTime = 0.2f;
+
+	// Passing in the projectile as the parameter
+	FTimerDelegate Delegate;
+	Delegate.BindUObject(this, &AVanPlayerCharacter::AttackTimerElapsed, ProjectileClass);
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, Delegate, AttackDelayTime, false);
 	
 }
 
-void AVanPlayerCharacter::AttackTimerElapsed()
+void AVanPlayerCharacter::AttackTimerElapsed(
+	TSubclassOf<AVanProjectile> ProjectileClass)
 {
-	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+	if (!ProjectileClass)
+		return;
 
-	FRotator SpawnRotation = GetControlRotation();
-	FVector ForwardVector = SpawnRotation.Vector();
+	const FTransform MuzzleTransform =
+		GetMesh()->GetSocketTransform(MuzzleSocketName, RTS_World);
 
-	// Push the spawn point slightly forward so it is outside the capsule
-	SpawnLocation += ForwardVector * 37.f;  // try 30–50
+	FVector SpawnLocation = MuzzleTransform.GetLocation();
+	FRotator SpawnRotation = MuzzleTransform.Rotator();
+
+	// Push forward slightly so we don't overlap the mesh
+	const FVector ForwardVector = SpawnRotation.Vector();
+	SpawnLocation += ForwardVector * 30.f;
 
 	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
 	SpawnParams.Instigator = this;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	GetWorld()->SpawnActor<AVanProjectile>(
+		ProjectileClass,
+		SpawnLocation,
+		SpawnRotation,
+		SpawnParams
+	);
 }
 
 // Called when the game starts or when spawned
@@ -109,7 +126,13 @@ void AVanPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInput->BindAction(Input_Move, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::Move);
 	EnhancedInput->BindAction(Input_Look, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::Look);
-	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this, &AVanPlayerCharacter::PrimaryAttack);
 	EnhancedInput->BindAction(Input_Jump, ETriggerEvent::Started, this, &AVanPlayerCharacter::Jump);
+	// Projectile Attacks
+	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent::Triggered, this,
+		&AVanPlayerCharacter::StartProjectileAttack, PrimaryAttackProjectileClass);
+	EnhancedInput->BindAction(Input_SecondaryAttack, ETriggerEvent::Triggered, this,
+		&AVanPlayerCharacter::StartProjectileAttack, SecondaryAttackProjectileClass);
+	EnhancedInput->BindAction(Input_SpecialAttack, ETriggerEvent::Triggered, this,
+		&AVanPlayerCharacter::StartProjectileAttack, SpecialAttackProjectileClass);
 }
 //Test only

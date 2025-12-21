@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "VanPlayerCharacter.generated.h"
 
-class AVanProjectileMagic;
+class AVanProjectile;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
@@ -24,9 +24,17 @@ public:
 	AVanPlayerCharacter();
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AVanProjectileMagic> ProjectileClass;
+	TSubclassOf<AVanProjectile> PrimaryAttackProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TSubclassOf<AVanProjectile> SecondaryAttackProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TSubclassOf<AVanProjectile> SpecialAttackProjectileClass;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UNiagaraSystem> CastingEffect;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<USoundBase> CastingSound;
 	
@@ -48,6 +56,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_PrimaryAttack;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> Input_SecondaryAttack;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> Input_SpecialAttack;
+	
 	UPROPERTY(VisibleAnywhere, Category="Components");
 	TObjectPtr<UCameraComponent> CameraComp;
 	
@@ -57,8 +71,8 @@ protected:
 	void Move(const FInputActionValue& InValue);
 	void Look(const FInputActionInstance& InValue);
 	void Jump(const FInputActionValue& InValue);
-	void PrimaryAttack();
-	void AttackTimerElapsed();
+	void  StartProjectileAttack(TSubclassOf<AVanProjectile> ProjectileClass);
+	void AttackTimerElapsed(TSubclassOf<AVanProjectile> ProjectileClass);
 	
 protected:
 	// Called when the game starts or when spawned

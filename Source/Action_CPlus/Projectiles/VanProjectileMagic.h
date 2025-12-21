@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "VanProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "VanProjectileMagic.generated.h"
 
@@ -14,36 +14,17 @@ class UNiagaraComponent;
 class UAudioComponent;
 
 UCLASS()
-class ACTION_CPLUS_API AVanProjectileMagic : public AActor
+class ACTION_CPLUS_API AVanProjectileMagic : public AVanProjectile
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
 	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UNiagaraSystem> ExpostionEffect;
-	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAudioComponent> LoopedAudioComponent;
-	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<USoundBase> ExplosionSound;
-	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<USphereComponent> SphereComponent;	
-	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
-	
-	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse, const FHitResult& Hit) override;
 	
 public:	
 	
-	virtual void PostInitializeComponents() override;
 	// Sets default values for this actor's properties
 	AVanProjectileMagic();
 	
