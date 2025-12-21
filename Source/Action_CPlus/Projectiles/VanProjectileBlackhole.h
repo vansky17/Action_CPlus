@@ -24,6 +24,14 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category= "Components")
 	TObjectPtr<URadialForceComponent> RadialForceComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
+	float SwirlStrength = 300000.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
+	float MaxPullStrength = -300000.0f;
+
+	float CurrentPullStrength = -50000.0f;
 
 	UFUNCTION()
 	void OnSphereOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

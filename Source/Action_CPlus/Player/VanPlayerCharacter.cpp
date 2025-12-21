@@ -6,7 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "../Projectiles/VanProjectileMagic.h"
+#include "../Projectiles/VanProjectile.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -78,17 +78,28 @@ void AVanPlayerCharacter::AttackTimerElapsed(
 	TSubclassOf<AVanProjectile> ProjectileClass)
 {
 	if (!ProjectileClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ProjectileClass is NULL"));
 		return;
+	}
+
+	const AVanProjectile* ProjectileCDO =
+		ProjectileClass->GetDefaultObject<AVanProjectile>();
+
+	const FVector SpawnOffset = ProjectileCDO
+		? ProjectileCDO->GetSpawnOffset()
+		: FVector::ZeroVector;
 
 	const FTransform MuzzleTransform =
 		GetMesh()->GetSocketTransform(MuzzleSocketName, RTS_World);
 
-	FVector SpawnLocation = MuzzleTransform.GetLocation();
+	FVector SpawnLocation =
+		MuzzleTransform.TransformPosition(SpawnOffset);
+
 	FRotator SpawnRotation = MuzzleTransform.Rotator();
 
-	// Push forward slightly so we don't overlap the mesh
-	const FVector ForwardVector = SpawnRotation.Vector();
-	SpawnLocation += ForwardVector * 30.f;
+	// Push slightly forward to avoid overlap
+	SpawnLocation += SpawnRotation.Vector() * 30.f;
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
@@ -103,6 +114,7 @@ void AVanPlayerCharacter::AttackTimerElapsed(
 		SpawnParams
 	);
 }
+
 
 // Called when the game starts or when spawned
 void AVanPlayerCharacter::BeginPlay()
