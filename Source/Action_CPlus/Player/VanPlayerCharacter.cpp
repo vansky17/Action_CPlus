@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "../Projectiles/VanProjectile.h"
+#include "Action_CPlus/ActionSystem/VanActionSystemComponent.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,6 +23,8 @@ AVanPlayerCharacter::AVanPlayerCharacter()
 	
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+	
+	ActionSystemComponent = CreateDefaultSubobject<UVanActionSystemComponent>("ActionSystemComp");
 	
 	MuzzleSocketName = "Muzzle_01";
 	
@@ -128,6 +131,16 @@ void AVanPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+float AVanPlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	ActionSystemComponent->ApplyHealthChange(-ActualDamage);
+	
+	return ActualDamage;
 }
 
 // Called to bind functionality to input

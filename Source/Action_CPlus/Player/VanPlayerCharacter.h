@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "VanPlayerCharacter.generated.h"
 
+class UVanActionSystemComponent;
 class AVanProjectile;
 struct FInputActionInstance;
 struct FInputActionValue;
@@ -68,6 +69,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Components");
 	TObjectPtr<USpringArmComponent> SpringArmComp;
 	
+	UPROPERTY(VisibleAnywhere, Category="Components");
+	TObjectPtr<UVanActionSystemComponent> ActionSystemComponent;
+	
 	void Move(const FInputActionValue& InValue);
 	void Look(const FInputActionInstance& InValue);
 	void Jump(const FInputActionValue& InValue);
@@ -81,7 +85,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override; 
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
