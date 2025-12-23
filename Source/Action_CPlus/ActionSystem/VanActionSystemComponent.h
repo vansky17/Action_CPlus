@@ -6,10 +6,13 @@
 #include "Components/ActorComponent.h"
 #include "VanActionSystemComponent.generated.h"
 
+USTRUCT(BlueprintType)
 struct FVanAttributeSet
 {
+	GENERATED_BODY()
 	FVanAttributeSet()
 		: Health(100.0f){}
+	UPROPERTY(BlueprintReadOnly)
 	float Health;
 };
 
@@ -26,6 +29,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(BlueprintReadOnly)
 	FVanAttributeSet Attributes;
 
 public:

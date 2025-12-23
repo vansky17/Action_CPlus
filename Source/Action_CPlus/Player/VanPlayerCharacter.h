@@ -69,7 +69,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Components");
 	TObjectPtr<USpringArmComponent> SpringArmComp;
 	
-	UPROPERTY(VisibleAnywhere, Category="Components");
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components");
 	TObjectPtr<UVanActionSystemComponent> ActionSystemComponent;
 	
 	void Move(const FInputActionValue& InValue);
