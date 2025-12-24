@@ -15,7 +15,7 @@ struct FVanAttributeSet
 	UPROPERTY(BlueprintReadOnly)
 	float Health;
 };
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, OldHealth);
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTION_CPLUS_API UVanActionSystemComponent : public UActorComponent
 {
@@ -25,7 +25,8 @@ public:
 	// Sets default values for this component's properties
 	UVanActionSystemComponent();
 	void ApplyHealthChange (float InValueChange);
-
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChanged OnHealthChanged;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
