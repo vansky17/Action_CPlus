@@ -57,7 +57,7 @@ void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	
 	GetWorld()->OverlapMultiByChannel(Overlaps, Center, FQuat::Identity, CollisionChannel, Shape);
 	
-	DrawDebugSphere(GetWorld(), Center, InteractionRadius, 32, FColor::White);
+	/*DrawDebugSphere(GetWorld(), Center, InteractionRadius, 32, FColor::White);*/
 	
 	AActor* BestActor = nullptr;
 	float HighestDotResutl = -1.0;
@@ -76,15 +76,15 @@ void UVanInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 			BestActor = Overlap.GetActor();
 			HighestDotResutl = DotResult;
 		}
-		DrawDebugBox(GetWorld(), OverlapLocation, FVector(50.0f), FColor::Red, false);
+		/*DrawDebugBox(GetWorld(), OverlapLocation, FVector(50.0f), FColor::Red, false);
 		FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
-		DrawDebugString(GetWorld(), OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
+		DrawDebugString(GetWorld(), OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);*/
 	}
 	
 	SelectedActor = BestActor;
-	if (BestActor)
+	/*if (BestActor)
 	{
 		DrawDebugBox(GetWorld(), BestActor->GetActorLocation(), FVector(70.0f), FColor::Green, false);
-	}
+	}*/
 }
 
