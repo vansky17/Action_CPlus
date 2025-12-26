@@ -72,11 +72,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components");
 	TObjectPtr<UVanActionSystemComponent> ActionSystemComponent;
 	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimMontage> DeathMontage; 
+	
 	void Move(const FInputActionValue& InValue);
 	void Look(const FInputActionInstance& InValue);
 	void Jump(const FInputActionValue& InValue);
 	void  StartProjectileAttack(TSubclassOf<AVanProjectile> ProjectileClass);
 	void AttackTimerElapsed(TSubclassOf<AVanProjectile> ProjectileClass);
+	
+	UFUNCTION()
+	void OnHealthChanged(float NewHealth, float OldHealth);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -85,6 +91,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	virtual void PostInitializeComponents() override;
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override; 
 	

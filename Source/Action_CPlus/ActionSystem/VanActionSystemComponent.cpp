@@ -17,9 +17,16 @@ UVanActionSystemComponent::UVanActionSystemComponent()
 void UVanActionSystemComponent::ApplyHealthChange(float InValueChange)
 {
 	float OldHealth = Attributes.Health;
-	Attributes.Health += InValueChange;
+	/*Attributes.Health += InValueChange;*/
 	
-	OnHealthChanged.Broadcast(Attributes.Health, OldHealth);
+	float MaxHealth = 100.0f;
+	GetDefault<UVanActionSystemComponent>()->Attributes.Health;
+	Attributes.Health = FMath::Clamp(Attributes.Health + InValueChange, 0.0f, MaxHealth);
+	
+	if (!FMath::IsNearlyEqual(OldHealth, Attributes.Health))
+	{
+		OnHealthChanged.Broadcast(Attributes.Health, OldHealth);
+	}
 	
 	UE_LOG(LogTemp, Log, TEXT("New Health: %f"), Attributes.Health)
 }

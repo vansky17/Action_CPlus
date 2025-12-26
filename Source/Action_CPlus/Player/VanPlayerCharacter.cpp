@@ -9,6 +9,7 @@
 #include "../Projectiles/VanProjectile.h"
 #include "Action_CPlus/ActionSystem/VanActionSystemComponent.h"
 #include "Engine/EngineTypes.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -118,6 +119,16 @@ void AVanPlayerCharacter::AttackTimerElapsed(
 	);
 }
 
+void AVanPlayerCharacter::OnHealthChanged(float NewHealth, float OldHealth)
+{
+	if (FMath::IsNearlyZero(NewHealth))
+	{
+		DisableInput(nullptr);
+		GetMovementComponent()->StopMovementImmediately();
+		PlayAnimMontage(DeathMontage);
+	}
+}
+
 
 // Called when the game starts or when spawned
 void AVanPlayerCharacter::BeginPlay()
@@ -133,8 +144,14 @@ void AVanPlayerCharacter::Tick(float DeltaTime)
 
 }
 
+void AVanPlayerCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	ActionSystemComponent->OnHealthChanged.AddDynamic(this, &AVanPlayerCharacter::OnHealthChanged);
+}
+
 float AVanPlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
-	class AController* EventInstigator, AActor* DamageCauser)
+                                      class AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
